@@ -5,7 +5,7 @@ import BookContext from '../../context/books/bookContext';
 const SearchResults = () => {
   const bookContext = useContext(BookContext);
   const { loading, books } = bookContext;
-  books.map((book) => console.log(book));
+  // books.map((book) => console.log(book));
 
   if (loading) {
     return <Spinner />;

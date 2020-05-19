@@ -30,8 +30,14 @@ const BookState = (props) => {
           console.log(err);
         } else {
           const bookData = res.GoodreadsResponse.search.results.work;
-          console.log(bookData);
-          const searchedBooks = bookData.map((book) => ((book.id = res.GoodreadsResponse.search.results.work.id), console.log(book)));
+          console.log(bookData[0]);
+          const searchedBooks = bookData.map((book) => ({
+            id: book.id._,
+            title: book.best_book.title,
+            author: book.best_book.author.name,
+            img: book.best_book.image_url,
+            rating: book.average_rating,
+          }));
           console.log(searchedBooks);
           dispatch({ type: SEARCH_BOOKS, payload: searchedBooks });
         }
