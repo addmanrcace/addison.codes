@@ -1,11 +1,14 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useContext } from 'react';
 import axios from 'axios';
 import BookContext from './bookContext';
 import BookReducer from './bookReducer';
+import AlertContext from '../alert/alertContext';
 import xml2js from 'xml2js';
 import { SEARCH_BOOKS, SET_LOADING } from '../types';
 
 const BookState = (props) => {
+  const alertState = useContext(AlertContext);
+
   const initialState = {
     books: [],
     book: {},
@@ -27,18 +30,18 @@ const BookState = (props) => {
       },
       (err, res) => {
         if (err) {
-          console.log(err);
+          alertState.setAlert(err, 'red');
         } else {
           const bookData = res.GoodreadsResponse.search.results.work;
-          console.log(bookData[0]);
+          console.log(bookData);
           const searchedBooks = bookData.map((book) => ({
             id: book.id._,
             title: book.best_book.title,
             author: book.best_book.author.name,
             img: book.best_book.image_url,
+            year: book.original_publication_year._,
             rating: book.average_rating,
           }));
-          console.log(searchedBooks);
           dispatch({ type: SEARCH_BOOKS, payload: searchedBooks });
         }
       }
