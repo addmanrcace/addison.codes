@@ -15,7 +15,8 @@ const BookSearch = () => {
       searchBooks(text);
       setText('');
     } else {
-      setAlert('Please enter something', 'red');
+      e.preventDefault();
+      setAlert('Please enter something');
     }
   };
 
