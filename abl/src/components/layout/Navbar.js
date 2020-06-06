@@ -1,8 +1,70 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import authContext from '../../context/auth/authContext';
 
 const Navbar = () => {
   const [isExpanded, toggleExpansion] = useState(false);
+  const { isAuthenticated, logout, user } = useContext(authContext);
+
+  const onLogout = () => logout();
+
+  const authLinks = (
+    <Fragment>
+      <h1>Hello {user && user.name}</h1>
+      <a
+        href="#!"
+        className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-red-500 hover:bg-white mt-4 lg:mt-0"
+        onClick={onLogout}
+      >
+        Logout
+      </a>
+      <Link
+        to="/"
+        href="#!"
+        className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4"
+        onClick={() => toggleExpansion(!isExpanded)}
+      >
+        Home
+      </Link>
+      <Link
+        to="/about"
+        href="#!"
+        className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4"
+        onClick={() => toggleExpansion(!isExpanded)}
+      >
+        About
+      </Link>
+    </Fragment>
+  );
+
+  const guestLinks = (
+    <Fragment>
+      <Link
+        to="/"
+        href="#!"
+        className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4"
+        onClick={() => toggleExpansion(!isExpanded)}
+      >
+        Home
+      </Link>
+      <Link
+        to="/about"
+        href="#!"
+        className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4"
+        onClick={() => toggleExpansion(!isExpanded)}
+      >
+        About
+      </Link>
+      <Link
+        to="/login"
+        href="#!"
+        className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4"
+        onClick={() => toggleExpansion(!isExpanded)}
+      >
+        Login
+      </Link>
+    </Fragment>
+  );
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-red-500 p-6 z-40 relative">
@@ -18,22 +80,8 @@ const Navbar = () => {
         </button>
       </div>
       <div className={`w-full block flex-grow lg:flex lg:items-center lg:w-auto ${isExpanded ? 'block' : 'hidden'}`}>
-        <div className="text-sm lg:flex-grow">
-          <Link to="/" href="#!" className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
-            Home
-          </Link>
-          <Link to="/about" href="#!" className="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
-            About
-          </Link>
-        </div>
-        <div>
-          <a
-            href="#!"
-            className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-red-500 hover:bg-white mt-4 lg:mt-0"
-          >
-            My Account
-          </a>
-        </div>
+        <div className="text-sm lg:flex-grow">{isAuthenticated ? authLinks : guestLinks}</div>
+        <div>{/* This is for right formatting */}</div>
       </div>
     </nav>
   );
