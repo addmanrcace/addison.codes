@@ -1,5 +1,6 @@
 export const SEARCH_BOOKS = 'SEARCH_BOOKS';
 export const GET_BOOKS = 'GET_BOOKS';
+export const ADD_BOOK = 'ADD_BOOK';
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 export const SET_LOADING = 'SET_LOADING';
 

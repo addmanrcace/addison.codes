@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import SearchResults from '../books/SearchResults';
 import BookSearch from '../books/BookSearch';
+import Collection from '../books/Collection';
 import AuthContext from '../../context/auth/authContext';
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
     <div className="mx-auto">
       <BookSearch />
       <SearchResults />
+      <Collection />
     </div>
   );
 };

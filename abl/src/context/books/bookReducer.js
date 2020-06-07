@@ -1,11 +1,23 @@
-import { SEARCH_BOOKS, SET_LOADING, CLEAR_SEARCH } from '../types';
+import { SEARCH_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH, GET_BOOKS } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_BOOKS:
+      return {
+        ...state,
+        collection: action.payload,
+        loading: false,
+      };
     case SEARCH_BOOKS:
       return {
         ...state,
         books: action.payload,
+        loading: false,
+      };
+    case ADD_BOOK:
+      return {
+        ...state,
+        collection: [action.payload, ...state.collection],
         loading: false,
       };
     case CLEAR_SEARCH:

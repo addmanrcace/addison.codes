@@ -4,7 +4,7 @@ import BookContext from './bookContext';
 import BookReducer from './bookReducer';
 import AlertContext from '../alert/alertContext';
 import xml2js from 'xml2js';
-import { SEARCH_BOOKS, SET_LOADING, CLEAR_SEARCH } from '../types';
+import { SEARCH_BOOKS, GET_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH } from '../types';
 
 const BookState = props => {
   const alertState = useContext(AlertContext);
@@ -12,6 +12,7 @@ const BookState = props => {
   const initialState = {
     books: [],
     book: {},
+    collection: [],
     loading: false,
   };
 
@@ -33,7 +34,6 @@ const BookState = props => {
           alertState.setAlert(err, 'red');
         } else {
           const bookData = res.GoodreadsResponse.search.results.work;
-          console.log(bookData);
           const searchedBooks = bookData.map(book => ({
             id: book.id._,
             title: book.best_book.title,
@@ -48,6 +48,35 @@ const BookState = props => {
     );
   };
 
+  // Get books for collection
+  const getBooks = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/books');
+      dispatch({
+        type: GET_BOOKS,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Add book
+  const addBook = async book => {
+    setLoading();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = axios.post('http://localhost:5000/api/books', book, config);
+      dispatch({ type: ADD_BOOK, payload: res.data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // Clear search
   const clearSearch = () => dispatch({ type: CLEAR_SEARCH });
 
@@ -58,9 +87,11 @@ const BookState = props => {
     <BookContext.Provider
       value={{
         books: state.books,
-        // book: state.book,
         loading: state.loading,
+        collection: state.collection,
         searchBooks,
+        getBooks,
+        addBook,
         setLoading,
         clearSearch,
       }}
