@@ -4,7 +4,7 @@ import BookContext from './bookContext';
 import BookReducer from './bookReducer';
 import AlertContext from '../alert/alertContext';
 import xml2js from 'xml2js';
-import { SEARCH_BOOKS, GET_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH } from '../types';
+import { SEARCH_BOOKS, GET_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH, DELETE_BOOK } from '../types';
 
 const BookState = props => {
   const alertState = useContext(AlertContext);
@@ -70,8 +70,21 @@ const BookState = props => {
       },
     };
     try {
-      const res = axios.post('http://localhost:5000/api/books', book, config);
+      const res = await axios.post('http://localhost:5000/api/books', book, config);
       dispatch({ type: ADD_BOOK, payload: res.data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Delete book from collection
+  const deleteBook = async id => {
+    try {
+      await axios.delete(`http://localhost:5000/api/books/${id}`);
+      dispatch({
+        type: DELETE_BOOK,
+        payload: id,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -92,6 +105,7 @@ const BookState = props => {
         searchBooks,
         getBooks,
         addBook,
+        deleteBook,
         setLoading,
         clearSearch,
       }}

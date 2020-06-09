@@ -47,4 +47,22 @@ router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]], 
   }
 });
 
+// @route     DELETE api/books/:id
+// @desc      Delete book from personal collection
+// @access
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    let book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ msg: 'Book not found' });
+    // Check if user is the owner of the book
+    if (book.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+    await Book.findByIdAndRemove(req.params.id);
+    res.json({ msg: 'Book removed' });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = router;

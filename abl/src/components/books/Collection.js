@@ -17,8 +17,9 @@ const Collection = () => {
   return (
     <Fragment>
       <h1 className="mt-4 font-extrabold text-xl">My Collection:</h1>
+      <h2>{collection.length} Books</h2>
       {collection.map(book => (
-        <CollectionBookCard book={book} />
+        <CollectionBookCard book={book} key={book._id} />
       ))}
       {loading ? <Spinner /> : null}
     </Fragment>

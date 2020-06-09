@@ -1,4 +1,4 @@
-import { SEARCH_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH, GET_BOOKS } from '../types';
+import { SEARCH_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH, GET_BOOKS, DELETE_BOOK } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
@@ -17,7 +17,13 @@ export default (state, action) => {
     case ADD_BOOK:
       return {
         ...state,
-        collection: [action.payload, ...state.collection],
+        collection: [...state.collection, action.payload],
+        loading: false,
+      };
+    case DELETE_BOOK:
+      return {
+        ...state,
+        collection: state.collection.filter(book => book._id !== action.payload),
         loading: false,
       };
     case CLEAR_SEARCH:
