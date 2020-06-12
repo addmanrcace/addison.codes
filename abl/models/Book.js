@@ -27,6 +27,12 @@ const BookSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Want to read', 'Reading', 'Finished', 'Dropped'],
+    default: 'Want to read',
+  },
 });
 
 module.exports = mongoose.model('book', BookSchema);

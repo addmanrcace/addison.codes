@@ -47,9 +47,30 @@ router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]], 
   }
 });
 
+// @route     PUT api/books/:id
+// @desc      Update book from personal collection
+// @access    Private
+router.put('/:id', auth, async (req, res) => {
+  const { status } = req.body;
+  const newStatus = status;
+
+  try {
+    let book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ msg: 'Book not found' });
+    // Check if user is the owner of the book
+    if (book.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+    book = await Book.findByIdAndUpdate(req.params.id, { status: newStatus }, { new: true });
+    res.json({ book });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // @route     DELETE api/books/:id
 // @desc      Delete book from personal collection
-// @access
+// @access    Private
 router.delete('/:id', auth, async (req, res) => {
   try {
     let book = await Book.findById(req.params.id);

@@ -4,7 +4,7 @@ import BookContext from './bookContext';
 import BookReducer from './bookReducer';
 import AlertContext from '../alert/alertContext';
 import xml2js from 'xml2js';
-import { SEARCH_BOOKS, GET_BOOKS, ADD_BOOK, SET_LOADING, CLEAR_SEARCH, DELETE_BOOK } from '../types';
+import { SEARCH_BOOKS, GET_BOOKS, ADD_BOOK, UPDATE_BOOK, SET_LOADING, CLEAR_SEARCH, DELETE_BOOK } from '../types';
 
 const BookState = props => {
   const alertState = useContext(AlertContext);
@@ -41,6 +41,7 @@ const BookState = props => {
             img: book.best_book.image_url,
             year: book.original_publication_year._,
             rating: book.average_rating,
+            status: 'Want to read',
           }));
           dispatch({ type: SEARCH_BOOKS, payload: searchedBooks });
         }
@@ -77,6 +78,29 @@ const BookState = props => {
     }
   };
 
+  // Update book in collection
+  const updateBook = async book => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      if (book.status === 'Reading' || book.status === 'Dropped' || book.status === 'Finished' || book.status === 'Want to read') {
+        const res = await axios.put(`http://localhost:5000/api/books/${book._id}`, book, config);
+        dispatch({
+          type: UPDATE_BOOK,
+          payload: res.data,
+        });
+        getBooks();
+      } else {
+        throw new Error('Status is invalid');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // Delete book from collection
   const deleteBook = async id => {
     try {
@@ -105,6 +129,7 @@ const BookState = props => {
         searchBooks,
         getBooks,
         addBook,
+        updateBook,
         deleteBook,
         setLoading,
         clearSearch,
