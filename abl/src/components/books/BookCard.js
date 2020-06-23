@@ -49,7 +49,7 @@ const BookCard = props => {
               {averageRating}
             </span>
             <span className="inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">&copy;{publishYear}</span>
-            <button className="px-3 py-2 bg-blue-700 text-gray-700" onClick={onSubmit}>
+            <button className="px-3 py-2 bg-blue-700 rounded text-white" onClick={onSubmit}>
               Add Book
             </button>
           </div>
