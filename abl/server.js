@@ -1,5 +1,6 @@
 const express = require('express');
 const logger = require('./middleware/logger');
+const serverless = require('serverless-http');
 const connectDB = require('./config/db');
 
 // Initialize express
@@ -27,8 +28,13 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/books', require('./routes/books'));
 
+// Serverless functions
+app.use('/.netlify/functions/server', router);
+
 // Define port
 const PORT = process.env.PORT || 5000;
 
 // Start server
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+module.exports.handler = serverless(app);
